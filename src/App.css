@@ -1,0 +1,517 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500&family=Lustria&family=Nunito:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap');
+
+/* ─── Design Tokens ──────────────────────────────────────────── */
+:root {
+  /* Palette */
+  --cream:          #F2E6D0;   /* background */
+  --butter:         #F5D998;   /* card surface */
+  --gold:           #DDA428;   /* primary accent */
+  --gold-dark:      #B8861E;   /* gold pressed / hover */
+  --sienna:         #C25B33;   /* burnt sienna accent */
+  --avocado:        #74843E;   /* secondary accent */
+  --teak:           #4A3424;   /* borders / headlines */
+  --ink:            #2B2520;   /* body text */
+  --ink-muted:      #5E4A3A;   /* muted text — darkened for readability */
+  --turquoise:      #3E8C89;   /* rare highlight */
+  --paper-light:    #FAF3E2;   /* lighter paper tone */
+
+  /* Typography */
+  --font-display:   'Lustria', Georgia, serif;
+  --font-body:      'Nunito', 'Segoe UI', system-ui, sans-serif;
+  --font-meta:      'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  /* Geometry */
+  --radius-sm:      6px;
+  --radius:         14px;
+  --radius-lg:      18px;
+  --radius-card:    16px;
+
+  /* Shadows — warm-toned, no cool grey */
+  --shadow-card:    4px 6px 0px var(--teak),
+                    0 8px 24px rgba(74, 52, 36, 0.18);
+  --shadow-hover:   6px 8px 0px var(--teak),
+                    0 12px 32px rgba(74, 52, 36, 0.25);
+  --shadow-control: 2px 3px 0px rgba(74, 52, 36, 0.35);
+  --shadow-control-focus: 3px 4px 0px var(--teak);
+
+  /* Borders */
+  --border-card:    2.5px solid var(--teak);
+  --border-control: 2px solid var(--teak);
+
+  /* Transitions */
+  --transition:     200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Paper Grain Texture (CSS noise) ───────────────────────── */
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-2%, -3%); }
+  20%  { transform: translate(3%, 2%); }
+  30%  { transform: translate(-1%, 4%); }
+  40%  { transform: translate(4%, -1%); }
+  50%  { transform: translate(-3%, 3%); }
+  60%  { transform: translate(2%, -4%); }
+  70%  { transform: translate(-4%, 1%); }
+  80%  { transform: translate(1%, -2%); }
+  90%  { transform: translate(-2%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ─── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Subtle SVG paper grain overlay */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeBlend in='SourceGraphic' mode='multiply'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.055'/%3E%3C/svg%3E");
+}
+
+/* ─── Layout ─────────────────────────────────────────────────── */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* ─── Header ─────────────────────────────────────────────────── */
+.header {
+  background-color: #FAF3E2;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeBlend in='SourceGraphic' mode='multiply'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");
+  padding: 44px 24px 40px;
+  position: relative;
+  border-bottom: 4px solid var(--teak);
+}
+
+/* Thin gold rule below the border for a double-rule vintage effect */
+.header::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gold);
+}
+
+.header-content {
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.header-eyebrow {
+  font-family: var(--font-meta);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sienna);
+  margin-bottom: 12px;
+}
+
+.app-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--teak);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+.app-subtitle {
+  margin-top: 12px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ─── Decorative divider ─────────────────────────────────────── */
+.header-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.header-divider-line {
+  flex: 1;
+  height: 1.5px;
+  background: var(--teak);
+  opacity: 0.20;
+}
+
+.header-divider-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+/* ─── Controls bar ───────────────────────────────────────────── */
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 28px;
+  margin-top: 28px;
+  align-items: stretch;
+}
+
+/* ─── Search bar ─────────────────────────────────────────────── */
+.search-bar {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--ink-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 40px 14px 44px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--butter);
+  border: var(--border-control);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-control);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+
+.search-input::placeholder {
+  color: var(--ink-muted);
+  font-weight: 400;
+  font-style: italic;
+}
+
+.search-input:focus {
+  border-color: var(--teak);
+  box-shadow: var(--shadow-control-focus);
+  transform: translate(-1px, -1px);
+}
+
+.search-clear {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+  font-family: var(--font-body);
+}
+
+.search-clear:hover {
+  color: var(--sienna);
+  background: rgba(194, 91, 51, 0.10);
+}
+
+/* ─── Book filter ────────────────────────────────────────────── */
+.book-filter {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.book-filter-icon {
+  position: absolute;
+  left: 13px;
+  color: var(--ink-muted);
+  pointer-events: none;
+}
+
+.book-filter-chevron {
+  position: absolute;
+  right: 12px;
+  color: var(--ink-muted);
+  pointer-events: none;
+}
+
+.book-filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 14px 40px 14px 38px;
+  font-family: var(--font-meta);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--butter);
+  border: var(--border-control);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-control);
+  cursor: pointer;
+  outline: none;
+  white-space: nowrap;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+
+.book-filter-select:focus,
+.book-filter-select:hover {
+  border-color: var(--teak);
+  box-shadow: var(--shadow-control-focus);
+  transform: translate(-1px, -1px);
+}
+
+/* ─── Results meta ───────────────────────────────────────────── */
+.results-meta {
+  font-family: var(--font-meta);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px dashed rgba(74, 52, 36, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Small decorative sprig before the count */
+.results-meta::before {
+  content: '✦';
+  color: var(--gold);
+  font-size: 10px;
+  margin-right: 4px;
+}
+
+.results-count {
+  font-weight: 700;
+  color: var(--teak);
+}
+
+.results-qualifier strong {
+  font-weight: 700;
+  color: var(--sienna);
+}
+
+/* ─── Recipe list ────────────────────────────────────────────── */
+.recipe-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 20px;
+}
+
+/* ─── Recipe card ────────────────────────────────────────────── */
+.recipe-card {
+  background: var(--butter);
+  border: var(--border-card);
+  border-radius: var(--radius-card);
+  padding: 22px 22px 20px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform var(--transition), box-shadow var(--transition);
+  cursor: default;
+  position: relative;
+  /* Subtle paper grain on cards */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeBlend in='SourceGraphic' mode='multiply'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+/* Scalloped top edge on cards (decorative recipe-card motif) */
+.recipe-card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: var(--butter);
+  border-top: 2.5px solid var(--teak);
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  mask-image: radial-gradient(ellipse 10px 8px at 5px 100%, transparent 99%, black 100%);
+  -webkit-mask-image: radial-gradient(ellipse 10px 8px at 5px 100%, transparent 99%, black 100%);
+  mask-size: 10px 8px;
+  -webkit-mask-size: 10px 8px;
+  mask-repeat: repeat-x;
+  -webkit-mask-repeat: repeat-x;
+  pointer-events: none;
+}
+
+/* Gold top-bar accent strip */
+.recipe-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--gold);
+  border-radius: calc(var(--radius-card) - 2px) calc(var(--radius-card) - 2px) 0 0;
+  border-bottom: 1.5px solid var(--gold-dark);
+}
+
+.recipe-card:hover {
+  transform: translate(-2px, -3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.recipe-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px; /* space for the gold accent strip */
+}
+
+/* ─── Book badge ─────────────────────────────────────────────── */
+.book-badge {
+  display: inline-block;
+  font-family: var(--font-meta);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1.5px solid;
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* ─── Page badge ─────────────────────────────────────────────── */
+.page-badge {
+  flex-shrink: 0;
+  font-family: var(--font-meta);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+  background: var(--cream);
+  border: 1.5px solid var(--teak);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+/* ─── Recipe title ───────────────────────────────────────────── */
+.recipe-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--teak);
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Recipe description ─────────────────────────────────────── */
+.recipe-description {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  line-height: 1.65;
+  margin-top: 2px;
+}
+
+/* ─── Card footer rule ───────────────────────────────────────── */
+.recipe-card .recipe-description::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1.5px;
+  background: var(--gold);
+  margin-bottom: 8px;
+  border-radius: 2px;
+}
+
+/* ─── Empty state ────────────────────────────────────────────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+  gap: 14px;
+}
+
+.empty-icon {
+  color: var(--gold);
+  margin-bottom: 6px;
+  opacity: 0.7;
+}
+
+.empty-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--teak);
+  letter-spacing: 0.01em;
+}
+
+.empty-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  max-width: 300px;
+  line-height: 1.6;
+}
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 580px) {
+  .controls {
+    flex-direction: column;
+    margin-top: 24px;
+  }
+
+  .book-filter-select {
+    width: 100%;
+  }
+
+  .recipe-list {
+    grid-template-columns: 1fr;
+  }
+
+  .header {
+    padding: 36px 20px 36px;
+  }
+
+  .main {
+    padding: 24px 16px 56px;
+  }
+}
